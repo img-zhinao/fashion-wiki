@@ -1,0 +1,24 @@
+{
+  "date": "2026-05-08",
+  "total_raw": 113,
+  "by_source": {
+    "rss_hypebeast": 20,
+    "rss_wwd": 20,
+    "rss_just_style": 20,
+    "rss_highsnobiety": 20,
+    "rss_bof": 20,
+    "perplexity": 5,
+    "event_cfda": 2,
+    "event_british_fashion_council": 2,
+    "brand_press_太平鸟": 2,
+    "event_federation": 2
+  },
+  "by_category": {
+    "brand": 37,
+    "market": 17,
+    "general": 49,
+    "supply": 3,
+    "trend": 4,
+    "fabric": 3
+  }
+}

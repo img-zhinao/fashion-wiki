@@ -1,0 +1,48 @@
+[2026-05-08 20:14:33] 🚀 Fashion Wiki 每日自动更新启动
+[2026-05-08 20:14:33] 📁 工作目录: /Users/zgeo01/.openclaw/workspace/content/fashion-wiki
+[2026-05-08 20:14:33] ✅ 环境变量已加载
+[2026-05-08 20:14:33] 📡 步骤 1: 内容采集...
+/Users/zgeo01/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+WARNING:root:feedparser 未安装，使用内置 XML 解析器
+WARNING:__main__:⚠️ RSS 源返回 400: vogue
+WARNING:__main__:⚠️ RSS 源返回 404: fashionunited
+WARNING:__main__:⚠️ RSS 源返回 404: elle_china
+WARNING:urllib3.connection:Certificate did not match expected hostname: www.grazia.com.cn. Certificate: {'subject': ((('commonName', '*.cnb.build'),),), 'issuer': ((('countryName', 'US'),), (('organizationName', 'DigiCert Inc'),), (('organizationalUnitName', 'www.digicert.com'),), (('commonName', 'RapidSSL TLS RSA CA G1'),)), 'version': 3, 'serialNumber': '01BED4B518C59E1D9E84A22F654C6DF9', 'notBefore': 'Apr 17 00:00:00 2026 GMT', 'notAfter': 'Nov  1 23:59:59 2026 GMT', 'subjectAltName': (('DNS', '*.cnb.build'), ('DNS', 'cnb.build')), 'OCSP': ('http://status.rapidssl.com',), 'caIssuers': ('http://cacerts.rapidssl.com/RapidSSLTLSRSACAG1.crt',), 'crlDistributionPoints': ('http://cdp.rapidssl.com/RapidSSLTLSRSACAG1.crl',)}
+ERROR:__main__:❌ RSS 采集失败: grazia_china | 错误: HTTPSConnectionPool(host='www.grazia.com.cn', port=443): Max retries exceeded with url: /rss/ (Caused by SSLError(CertificateError("hostname 'www.grazia.com.cn' doesn't match either of '*.cnb.build', 'cnb.build'")))
+WARNING:urllib3.connection:Certificate did not match expected hostname: www.yoka.com. Certificate: {'subject': ((('countryName', 'CN'),), (('stateOrProvinceName', '北京'),), (('localityName', '北京'),), (('organizationName', '北京新爱体育传媒科技有限公司'),), (('commonName', '*.ssports.com'),)), 'issuer': ((('countryName', 'BE'),), (('organizationName', 'GlobalSign nv-sa'),), (('commonName', 'GlobalSign RSA OV SSL CA 2018'),)), 'version': 3, 'serialNumber': '277586122485B47A1D791CAC', 'notBefore': 'May 12 06:12:02 2025 GMT', 'notAfter': 'Jun 13 06:12:01 2026 GMT', 'subjectAltName': (('DNS', '*.ssports.com'), ('DNS', 'ssports.iqiyi.com'), ('DNS', 'shinaisports.com'), ('DNS', '*.ssports.iqiyi.com'), ('DNS', '*.shinaisports.com'), ('DNS', 'ssports.com')), 'OCSP': ('http://ocsp.globalsign.com/gsrsaovsslca2018',), 'caIssuers': ('http://secure.globalsign.com/cacert/gsrsaovsslca2018.crt',)}
+ERROR:__main__:❌ RSS 采集失败: yoka | 错误: HTTPSConnectionPool(host='www.yoka.com', port=443): Max retries exceeded with url: /rss/ (Caused by SSLError(CertificateError("hostname 'www.yoka.com' doesn't match either of '*.ssports.com', 'ssports.iqiyi.com', 'shinaisports.com', '*.ssports.iqiyi.com', '*.shinaisports.com', 'ssports.com'")))
+ERROR:__main__:❌ 品牌新闻监测失败: UR | 错误: HTTPSConnectionPool(host='ur.com', port=443): Max retries exceeded with url: /news (Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:1129)')))
+ERROR:__main__:❌ 品牌新闻监测失败: ICICLE | 错误: HTTPSConnectionPool(host='icicle.com', port=443): Max retries exceeded with url: /news (Caused by SSLError(SSLError(1, '[SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure (_ssl.c:1129)')))
+WARNING:__main__:X_BEARER_TOKEN 未配置，跳过社交媒体采集
+[2026-05-08 20:16:39] 📥 原始内容:      113 条
+[2026-05-08 20:16:39] 🤖 步骤 2: AI 内容智造...
+/Users/zgeo01/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[2026-05-08 20:16:39] ============================================================
+[2026-05-08 20:16:39] 🚀 Fashion Wiki 内容智造引擎启动
+[2026-05-08 20:16:39] 📂 输入: /Users/zgeo01/.openclaw/workspace/content/fashion-wiki/.ingestion/raw
+[2026-05-08 20:16:39] 📂 输出: /Users/zgeo01/.openclaw/workspace/content/fashion-wiki/content
+[2026-05-08 20:16:39] 📊 最低评分: 70
+[2026-05-08 20:16:39] 📊 最大生成: 5
+[2026-05-08 20:16:39] ============================================================
+[2026-05-08 20:16:39] 📥 发现 113 个原始文件
+[2026-05-08 20:16:39] ⏭️ 跳过内容过短: brandpress_太平鸟_20260508_165354.json
+[2026-05-08 20:16:39] ⏭️ 跳过内容过短: brandpress_太平鸟_20260508_201632.json
+[2026-05-08 20:16:39] ⏭️ 跳过内容过短: event_british_fashion_council_20260508_165357.json
+[2026-05-08 20:16:39] ⏭️ 跳过内容过短: event_british_fashion_council_20260508_201636.json
+[2026-05-08 20:16:39] ⏭️ 跳过内容过短: event_cfda_20260508_165356.json
+[2026-05-08 20:16:39] ⏭️ 跳过内容过短: event_cfda_20260508_201634.json
+[2026-05-08 20:16:39] ⏭️ 跳过内容过短: event_federation_20260508_165402.json
+[2026-05-08 20:16:39] ⏭️ 跳过内容过短: event_federation_20260508_201639.json
+[2026-05-08 20:16:39] ⏭️ 跳过内容过短: perplexity_brand_f962c1d3_20260508_201527.json
+[2026-05-08 20:16:39] ⏭️ 跳过内容过短: perplexity_fabric_1cf01127_20260508_201550.json
+[2026-05-08 20:16:39] ============================================================
+[2026-05-08 20:16:39] 🎉 完成! 生成 0 篇文章
+[2026-05-08 20:16:39] ============================================================
+[2026-05-08 20:16:39] 📄 总文章数:       11 篇
+[2026-05-08 20:16:39] 📝 步骤 3: 更新全局索引...
+📝 更新 Fashion Wiki 全局索引...
+✅ 索引更新完成: /Users/zgeo01/.openclaw/workspace/content/fashion-wiki/content/index.md
+   共 10 个页面
+[2026-05-08 20:16:39] 📦 步骤 4: Git 提交...
