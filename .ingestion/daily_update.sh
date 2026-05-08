@@ -1,8 +1,6 @@
 #!/bin/bash
 # =================================================================
-# Fashion Wiki 每日自动更新脚本
-# =================================================================
-# 建议添加到 crontab: 0 6 * * * /Users/zgeo01/.openclaw/workspace/content/fashion-wiki/.ingestion/daily_update.sh
+# Fashion Wiki 每日自动更新脚本 (修复版)
 # =================================================================
 
 set -e
@@ -46,7 +44,7 @@ log "📥 原始内容: $RAW_COUNT 条"
 # =================================================================
 # 2. AI 内容智造 (06:15-06:45)
 # =================================================================
-log "🤖 步骤 2: AI 内容智造..."
+log "🤖 步骤 2: AI 内容智造 (Perplexity)..."
 
 cd "$INGESTION_DIR"
 python3 content_generator.py \
@@ -73,16 +71,16 @@ python3 "$INGESTION_DIR/update_index.py" >> "$LOG_FILE" 2>&1
 log "📦 步骤 4: Git 提交..."
 
 cd "$WORKSPACE"
-git add content/ "$INGESTION_DIR/logs/"
+git add content/ "$INGESTION_DIR/content_generator.py" "$INGESTION_DIR/update_index.py" "$INGESTION_DIR/ingestion.py" "$INGESTION_DIR/daily_update.sh"
 
 # 检查是否有变更
 if git diff --cached --quiet; then
-    log "⏭️ 无变更，跳过提交"
+    log "⏭️ 无新文章，跳过提交"
 else
     git commit -m "auto: $(date +%Y-%m-%d) 内容更新
 
-- 新增文章: 查看日志
-- 采集时间: $(date '+%Y-%m-%d %H:%M')
+- AI 自动生成 $(date '+%H:%M')
+- 采集来源: $RAW_COUNT 条
 - 运行主机: $(hostname)"
     
     git push origin main >> "$LOG_FILE" 2>&1
@@ -90,22 +88,10 @@ else
 fi
 
 # =================================================================
-# 5. 清理旧文件 (07:00)
+# 5. 生成日报 (07:00-07:05)
 # =================================================================
-log "🧹 步骤 5: 清理过期文件..."
+log "📊 步骤 5: 生成日报..."
 
-# 保留最近 7 天的原始文件
-find "$INGESTION_DIR/raw" -name "*.json" -mtime +7 -delete 2>/dev/null || true
-
-# 保留最近 30 天的日志
-find "$LOG_DIR" -name "*.log" -mtime +30 -delete 2>/dev/null || true
-
-# =================================================================
-# 6. 通知与报告 (07:00-07:05)
-# =================================================================
-log "📊 步骤 6: 生成日报..."
-
-# 统计信息
 ARTICLE_COUNT=$(find "$WORKSPACE/content" -name "*.md" -not -path "*/.ingestion/*" | wc -l)
 TODAY_FILES=$(find "$WORKSPACE/content" -name "*$(date +%Y%m%d)*.md" 2>/dev/null | wc -l)
 
@@ -114,7 +100,6 @@ REPORT="Fashion Wiki 每日更新报告 ✅
 新增文章: $TODAY_FILES 篇
 总文章数: $ARTICLE_COUNT 篇
 采集来源: $RAW_COUNT 条
-日志文件: fashion-wiki/.ingestion/logs/$(basename $LOG_FILE)
 访问地址: https://fashion-wiki-zgeo.vercel.app"
 
 log "$REPORT"

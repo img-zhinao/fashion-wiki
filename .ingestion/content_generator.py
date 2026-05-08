@@ -21,6 +21,20 @@ OUTPUT_DIR = BASE_DIR.parent / "content"
 LOG_FILE = BASE_DIR / "logs" / f"generator_{datetime.now().strftime('%Y%m%d')}.log"
 
 # API Keys
+# 尝试加载 .env 文件
+def load_env():
+    env_path = BASE_DIR / ".env"
+    if env_path.exists():
+        with open(env_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#"):
+                    key, _, value = line.partition("=")
+                    if key and value:
+                        os.environ[key.strip()] = value.strip()
+
+load_env()
+
 PERPLEXITY_API_KEY = os.getenv("PERPLEXITY_API_KEY", "")
 KIMI_API_KEY = os.getenv("KIMI_API_KEY", "")
 
@@ -162,25 +176,36 @@ def build_prompt(title, summary, content_type):
     template = prompts.get(content_type, prompts["trend"])
     return template.format(title=title, summary=summary[:2000])
 
-def call_kimi(prompt, max_retries=2):
-    """调用 Kimi API 生成内容"""
-    if not KIMI_API_KEY:
-        log("⚠️ KIMI_API_KEY 未配置，跳过 AI 生成")
+def call_ai(prompt, max_retries=2):
+    """调用 Perplexity API 生成内容（替代 Kimi）"""
+    if not PERPLEXITY_API_KEY:
+        log("⚠️ PERPLEXITY_API_KEY 未设置，跳过 AI 生成")
         return None
     
-    url = "https://api.moonshot.cn/v1/chat/completions"
+    url = "https://api.perplexity.ai/chat/completions"
     headers = {
-        "Authorization": f"Bearer {KIMI_API_KEY}",
+        "Authorization": f"Bearer {PERPLEXITY_API_KEY}",
         "Content-Type": "application/json"
     }
     
+    system_prompt = """你是 Fashion Wiki 的高级内容编辑。请基于提供的时尚行业资讯，撰写一篇结构化的 LLM-Wiki 格式文章。
+
+要求：
+1. 标题用中文，不超过 30 字
+2. 开头用 ">" 给出核心结论的一句话摘要
+3. 用 Markdown 表格呈现关键数据对比
+4. 包含 3-5 个核心要点
+5. 底部添加"关联阅读"
+6. 标注数据来源和时效性
+7. 纯 Markdown 格式，不要输出任何其他内容"""
+    
     payload = {
-        "model": "kimi-k2-0711-preview",  # 或 kimi-latest
+        "model": "sonar",
         "messages": [
-            {"role": "system", "content": "你是专业的时尚行业内容编辑，擅长将原始资讯转化为结构化的 LLM-Wiki 知识文章。"},
+            {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt}
         ],
-        "temperature": 0.3,
+        "temperature": 0.2,
         "max_tokens": 4000
     }
     
@@ -192,11 +217,11 @@ def call_kimi(prompt, max_retries=2):
                 content = data["choices"][0]["message"]["content"]
                 return content
             else:
-                log(f"⚠️ Kimi API 返回 {resp.status_code}: {resp.text[:200]}")
+                log(f"⚠️ Perplexity API 返回 {resp.status_code}: {resp.text[:200]}")
                 if attempt < max_retries - 1:
                     continue
         except Exception as e:
-            log(f"❌ Kimi API 调用失败 (尝试 {attempt+1}/{max_retries}): {e}")
+            log(f"❌ Perplexity API 调用失败 (尝试 {attempt+1}/{max_retries}): {e}")
             if attempt < max_retries - 1:
                 continue
     
@@ -298,11 +323,16 @@ def process_single_file(raw_file):
             data = json.load(f)
         
         title = data.get("title", "")
-        summary = data.get("summary", data.get("content", ""))
+        # 尝试多个字段获取内容
+        summary = data.get("summary", "")
+        content = data.get("content", "")
+        preview = data.get("content_preview", "")
+        # 取最长的可用内容
+        raw_text = max([summary, content, preview], key=len)
         source = data.get("source", "unknown")
         
-        if not title or len(summary) < 100:
-            log(f"⏭️ 跳过内容过短: {raw_file.name}")
+        if not title or len(raw_text) < 50:
+            log(f"⏭️ 跳过内容过短: {raw_file.name} (len={len(raw_text)})")
             return None
         
         # 分类
@@ -312,8 +342,8 @@ def process_single_file(raw_file):
         # 构建 prompt
         prompt = build_prompt(title, summary, content_type)
         
-        # 调用 Kimi 生成
-        generated = call_kimi(prompt)
+        # 调用 AI 生成
+        generated = call_ai(prompt)
         if not generated:
             log(f"❌ AI 生成失败: {title[:50]}...")
             return None
@@ -397,8 +427,8 @@ def main():
     log("=" * 60)
     
     # 检查 API Key
-    if not KIMI_API_KEY:
-        log("⚠️ 警告: KIMI_API_KEY 未设置，AI 润色将跳过")
+    if not PERPLEXITY_API_KEY:
+        log("⚠️ 警告: PERPLEXITY_API_KEY 未设置，AI 润色将跳过")
     
     # 获取原始文件列表
     raw_files = sorted(input_dir.glob("*.json"))
@@ -410,7 +440,8 @@ def main():
     
     # 处理
     generated = []
-    for raw_file in raw_files[:args.max_articles * 2]:  # 多尝试一些，因为会淘汰
+    max_attempts = min(100, len(raw_files))  # 最多尝试 100 个文件
+    for raw_file in raw_files[:max_attempts]:
         if len(generated) >= args.max_articles:
             break
         
