@@ -38,7 +38,45 @@ load_env()
 PERPLEXITY_API_KEY = os.getenv("PERPLEXITY_API_KEY", "")
 KIMI_API_KEY = os.getenv("KIMI_API_KEY", "")
 
-# 已知实体映射（用于自动双向链接）
+# 时尚行业关键词（用于内容相关性过滤）
+FASHION_KEYWORDS = [
+    # 中文
+    "服装", "服饰", "时装", "时尚", "潮流", "穿搭", "搭配",
+    "面料", "布料", "纤维", "纺织", "棉", "丝", "毛", "麻", "绒",
+    "品牌", "设计师", "联名", "系列", "新品", "发布", "秀场",
+    "时装周", "春夏", "秋冬", "趋势", "流行", "色彩", "款式",
+    "供应链", "代工", "工厂", "生产", "制造", "快反", "小单",
+    "消费者", "市场", "零售", "电商", "直播", "买手", "门店",
+    "可持续", "环保", "有机", "再生", "低碳", "循环经济",
+    "OEM", "ODM", "FOB", "CMT", "贴牌", "外贸", "出口", "订单",
+    "汉服", "国潮", "新中式", "旗袍", "唐装", "民族风",
+    "西装", "衬衫", "连衣裙", "T恤", "牛仔裤", "外套", "大衣",
+    "童装", "女装", "男装", "内衣", "运动服", "瑜伽", "户外",
+    "高跟鞋", "运动鞋", "包包", "配饰", "珠宝", "手表", "眼镜",
+    # 英文
+    "fashion", "apparel", "garment", "clothing", "textile",
+    "fabric", "fiber", "wool", "silk", "cotton", "linen",
+    "brand", "designer", "collection", "runway", "show",
+    "trend", "style", "couture", "luxury", "premium",
+    "retail", "ecommerce", "boutique", "wholesale",
+    "sustainable", "eco-friendly", "organic", "recycled",
+    "supply chain", "manufacturing", "factory", "sourcing",
+    "knitwear", "denim", "leather", "fur", "down",
+    "activewear", "sportswear", "lingerie", "swimwear",
+]
+
+def is_fashion_related(title: str, summary: str = "") -> bool:
+    """检测内容是否与时尚行业相关"""
+    text = f"{title} {summary}".lower()
+    
+    # 计算匹配的关键词数量
+    matches = sum(1 for kw in FASHION_KEYWORDS if kw.lower() in text)
+    
+    # 至少匹配 2 个关键词，或 1 个强相关词
+    strong_keywords = ["服装", "时装", "时尚", "fashion", "apparel", "面料", "品牌", "designer"]
+    has_strong = any(kw.lower() in text for kw in strong_keywords)
+    
+    return matches >= 2 or has_strong
 KNOWN_ENTITIES = {
     "UR": "[[ur]]", "URBAN REVIVO": "[[ur]]", "Urban Revivo": "[[ur]]",
     "太平鸟": "[[peacebird]]", "PEACEBIRD": "[[peacebird]]",
@@ -90,16 +128,18 @@ def classify_content(title, summary=""):
         return "trend"  # 默认趋势
 
 def build_prompt(title, summary, content_type):
-    """构建 Kimi prompt"""
+    """构建 Perplexity prompt - 明确从时尚行业视角分析"""
     
     prompts = {
-        "trend": """你是 Fashion Wiki 的高级趋势编辑。请基于以下时尚行业资讯，撰写一篇 LLM-Wiki 格式的趋势文章。
+        "trend": """你是 Fashion Wiki 的高级趋势编辑。请基于以下资讯，撰写一篇面向中国服装行业的趋势分析文章。
+
+重要：即使原始内容是国际新闻（如关税、贸易政策），也要从"对中国服装行业的影响"角度分析。
 
 要求：
-1. 标题用中文，不超过 30 字
-2. 开头用 ">" 给出核心结论的一句话摘要（不超过 140 字）
+1. 标题用中文，不超过 30 字，突出时尚/服装行业视角
+2. 开头用 ">" 给出对中国服装行业的核心影响结论（一句话）
 3. 用 Markdown 表格呈现关键数据对比
-4. 包含 3-5 个核心要点，用 bullet points
+4. 包含对中国服装企业的具体影响和建议
 5. 底部添加"关联阅读"区域，列出 2-3 个相关 Fashion Wiki 页面
 6. 标注数据来源和时效性
 7. 总字数 800-1500 字
@@ -336,11 +376,16 @@ def process_single_file(raw_file):
             return None
         
         # 分类
-        content_type = classify_content(title, summary)
+        content_type = classify_content(title, raw_text)
         log(f"📂 分类: {content_type} | {title[:50]}...")
         
-        # 构建 prompt
-        prompt = build_prompt(title, summary, content_type)
+        # 相关性检测：只处理时尚相关内容
+        if not is_fashion_related(title, raw_text):
+            log(f"⏭️ 跳过非时尚内容: {title[:50]}...")
+            return None
+        
+        # 构建 prompt - 使用 raw_text 而非 summary
+        prompt = build_prompt(title, raw_text, content_type)
         
         # 调用 AI 生成
         generated = call_ai(prompt)
