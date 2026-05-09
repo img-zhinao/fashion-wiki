@@ -1,7 +1,7 @@
 ---
 title: Fashion Wiki 全局内容字典
-description: "服装产业 AI 知识网络的内容索引，记录所有页面的 slug 与一句话描述。最后更新: 2026-05-09 16:21"
-date: 2026-05-09
+description: 服装产业 AI 知识网络的内容索引，记录所有页面的 slug 与一句话描述。最后更新: 2026-05-10 06:12
+date: 2026-05-10
 tags: [index, fashion, wiki]
 aliases: [home, 首页]
 ---
@@ -9,7 +9,7 @@ aliases: [home, 首页]
 # Fashion Wiki 全局内容字典
 
 > 服装产业 AI 知识网络的内容索引，记录所有页面的 slug 与一句话描述。
-> 最后更新: 2026-05-09 16:21 | 共 22 篇文章
+> 最后更新: 2026-05-10 06:12 | 共 36 篇文章
 
 ## 概念层
 
@@ -19,6 +19,8 @@ aliases: [home, 首页]
 
 - [[peacebird]] | 太平鸟（PEACEBIRD）是宁波太平鸟时尚服饰股份有限公司旗下品牌，1996 年创立于浙江宁波，以年轻化设计、潮流联名和数字化转型著称，是国产休闲服饰向潮流转型的代表品牌。
 - [[ur]] | UR（URBAN REVIVO）是快尚时装（广州）有限公司旗下的国产快时尚品牌，2006 年创立于广州，以"快奢时尚"定位、快速上新和潮流设计著称，对标 ZARA 和 H&M。
+- [[zara-denies-infringing-jo-malone-tradema-20260509]] | Zara 在法庭文件中否认侵犯 Estée Lauder 旗下 Jo Malone 商标，指其合作香氛使用符合后者2020年原则。
+- [[zara-denies-infringing-jo-malone-tradema-20260510]] | Zara 在法庭文件中否认侵犯 Estée Lauder 旗下 Jo Malone 商标，指其联名香氛使用符合后者2020年原则，凸显快时尚品牌香氛扩张中的知识产权挑战。
 
 ## 面料层
 
@@ -27,17 +29,29 @@ aliases: [home, 首页]
 
 ## 趋势层
 
+- [[examining-lauren-sánchez-bezoss-emerging-20260509]] | 国际高净值人群的时尚话语权正在重塑全球奢侈品市场格局，中国服装企业需要重新审视品牌影响力构建和消费者关系管理的策略。
+- [[examining-lauren-sánchez-bezoss-emerging-20260510]] | 劳伦·桑切斯·贝索斯作为贝索斯妻子新兴时尚ICON，其影响力将推动亚马逊平台奢侈品扩张，对中国服装企业提供供应链升级与品牌联名新机遇。
 - [[hans-feurer-behind-fashion-there-is-alwa-20260508]] | 中国服装品牌若想在国际舞台建立长期辨识度，必须从“卖产品”转向“讲好女性故事”，以更具人文深度的视觉叙事重塑品牌形象。
 - [[hans-feurer-behind-fashion-there-is-alwa-20260509]] | 国际顶级时尚摄影师的女性审美理念正在重塑全球服装品牌的视觉语言，中国服装企业需要从单纯的商业展示转向深层人文叙事，以提升品牌国际竞争力。
+- [[hans-feurer-behind-fashion-there-is-alwa-20260510]] | Shein等中国快时尚巨头价格上调将重塑全球竞争格局，推动中国服装企业加速转向高端化和可持续创新以抓住出口与内需双增长机遇。
 - [[remembering-peter-lindbergh-20260508]] | 林德伯格开创的极简主义摄影美学和超模文化运营模式，为中国服装品牌国际化提供了视觉叙事和人才培养的战略参考。
 - [[remembering-peter-lindbergh-20260509]] | 彼得·林德伯格的离世标志着时尚摄影从“造梦工厂”向“真实叙事”的转向，这一趋势将倒逼中国服装品牌重构视觉语言，从单纯的产品展示转向更具人文深度的品牌叙事。
+- [[remembering-peter-lindbergh-20260510]] | Peter Lindbergh的纪实摄影遗产正助力中国服装行业从“制造大国”转型“设计大国”，通过真实自然美学提升品牌叙事力和国际竞争力。
 - [[spring-summer-2026]] | 2026 年春夏服装流行趋势报告，涵盖新极简主义、多巴胺色彩、可持续材料和东方元素四大趋势方向，由 Fashion Wiki 趋势研究中心编制。
 - [[the-bof-podcast-a-tribute-to-the-endurin-20260509]] | Joan Burstein通过精选策略打造全球时尚门户的成功经验，为中国服装企业开拓国际市场提供了关键借鉴——品质甄选、品牌故事和零售体验是突破国际市场的核心竞争力。
+- [[the-bof-podcast-a-tribute-to-the-endurin-20260510]] | 琼·伯斯坦的精品店传奇为中国服装行业提供宝贵启示，推动本土零售从单一销售向全球时尚门户转型，提升品牌 curation 与消费者体验。
 - [[the-great-sustainability-rebrand-20260509]] | 全球时尚产业将可持续发展重新定位为财务价值驱动的生存战略，中国服装企业需抓住这一转变机遇，通过绿色创新实现成本优化与品牌升级。
+- [[the-great-sustainability-rebrand-20260510]] | 中国服装行业正加速从制造型向价值创造型转型，通过绿色低碳、循环经济和数智技术，抓住新质生产力机遇，实现碳中和与高质量发展。
 - [[this-mysterious-brand-is-the-future-of-g-20260508]] | 日本精品服装品牌的成功模式表明，中国服装企业应从快速扩张转向品质深耕，通过工艺创新和消费者教育建立长期竞争力。
+- [[this-mysterious-brand-is-the-future-of-g-20260509]] | 日本小众高质量服装品牌的国际扩张趋势，正在重塑全球消费者对"好衣服"的定义，中国服装企业需要从代工模式向品牌价值转变。
 - [[trumps-latest-10-tariffs-found-unlawful--20260508]] | 美国联邦贸易法院裁定特朗普政府最新一轮对华加征10%关税违法，凸显美国对华贸易政策的法律与政治不确定性。
 - [[what-fashion-can-offer-fencing-as-the-sp-20260508]] | 小众运动服装市场的商业化成功为中国时尚品牌开辟了新的增长赛道，通过跨界合作和品牌联动可实现差异化竞争。
+- [[what-fashion-can-offer-fencing-as-the-sp-20260509]] | 击剑运动寻求时尚品牌合作将为中国服装企业开辟体育时尚跨界新赛道，推动出口与本土品牌升级。
+- [[what-fashion-can-offer-fencing-as-the-sp-20260510]] | 击剑运动寻求时尚品牌合作将为中国服装企业注入体育时尚新动能，推动出口与本土品牌升级。
+- [[why-are-fashion-brands-culturemogging-th-20260509]] | 中国服装行业在2025年上半年顶住出口压力与成本挑战，实现内销温和增长与国潮创新驱动，正加速从制造大国向时尚强国转型。
 - [[why-wall-street-prefers-coach-to-gucci-20260508]] | 华尔街对Coach母公司Tapestry的估值逼近Gucci母公司Kering，预示奢侈品市场饱和，中国服装企业应加速从中低端代工向中高端品牌转型以抓住机遇。
+- [[why-wall-street-prefers-coach-to-gucci-20260509]] | Coach通过产品高端化与市场渗透双轮驱动，在中国市场实现34%增长，为国内轻奢品牌提供了"理性消费时代"的转型样本。
+- [[why-wall-street-prefers-coach-to-gucci-20260510]] | 华尔街对Coach母公司Tapestry的高估值预示奢侈品市场转向大众化，中国服装企业应加速中高端品牌转型以抢占内需与出口机遇。
 - [[zara-denies-infringing-jo-malone-tradema-20260508]] | 国际快时尚品牌的商标侵权风险提示中国服装企业：品牌合作需严格遵守知识产权协议，否则面临巨额诉讼和品牌信誉损害。
 - [[zara-denies-infringing-jo-malone-tradema-20260509]] | 国际奢侈品牌商标纠纷频发，中国服装零售企业在跨界合作中需加强知识产权风险防控，避免陷入高成本诉讼困境。
 
@@ -59,14 +73,14 @@ aliases: [home, 首页]
 
 ## 统计
 
-- 总文章数: 22
-- 品牌层: 2 篇
+- 总文章数: 36
+- 品牌层: 4 篇
 - 概念层: 1 篇
 - 面料层: 2 篇
 - 问答层: 1 篇
 - 指南层: 1 篇
 - 报告层: 1 篇
 - 供应链层: 1 篇
-- 趋势层: 13 篇
+- 趋势层: 25 篇
 
-*最后自动更新: 2026-05-09 16:21:08*
+*最后自动更新: 2026-05-10 06:12:01*
