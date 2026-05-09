@@ -51,7 +51,7 @@ python3 content_generator.py \
     --input-dir "$INGESTION_DIR/raw" \
     --output-dir "$WORKSPACE/content" \
     --min-score 70 \
-    --max-articles 5 \
+    --max-articles 8 \
     >> "$LOG_FILE" 2>&1
 
 NEW_COUNT=$(find "$WORKSPACE/content" -name "*.md" -not -path "*/.ingestion/*" | wc -l)

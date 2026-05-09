@@ -111,21 +111,56 @@ def log(msg):
         f.write(line + "\n")
 
 def classify_content(title, summary=""):
-    """判断内容类型"""
+    """判断内容类型 - 增强版，支持混合类型识别"""
     text = f"{title} {summary}".lower()
     
-    if any(k in text for k in ["趋势", "流行", "色彩", "时装周", "2026", "春夏", "秋冬"]):
-        return "trend"
-    elif any(k in text for k in ["面料", "纤维", "材质", "棉", "丝", "毛", "麻"]):
+    # 面料相关 (优先级较高)
+    fabric_keywords = ["面料", "纤维", "材质", "纺织", "棉", "丝", "毛", "麻", "绒", "纱",
+                      "天丝", "莫代尔", "涤纶", "尼龙", "氨纶", "羊毛", "羊绒",
+                      "针织", "梭织", "牛仔", "皮革", "羽绒", "面料科技",
+                      "fabric", "fiber", "textile", "knit", "woven", "denim",
+                      "sustainable fabric", "organic cotton", "recycled polyester"]
+    if any(k in text for k in fabric_keywords):
         return "fabric"
-    elif any(k in text for k in ["品牌", "联名", "新品", "发布", "UR", "太平鸟", "ICICLE"]):
-        return "brand"
-    elif any(k in text for k in ["供应链", "工厂", "采购", "代工", "ODM", "OEM"]):
+    
+    # 供应链相关 (优先级较高)
+    supply_keywords = ["供应链", "工厂", "采购", "代工", "生产", "制造", "供应商",
+                      "ODM", "OEM", "FOB", "CMT", "贴牌", "外贸", "出口", "订单",
+                      "小单快反", "快反", "柔性供应链", "数字化工厂",
+                      "supply chain", "manufacturing", "factory", "sourcing",
+                      "production", "supplier", "vendor", "logistics"]
+    if any(k in text for k in supply_keywords):
         return "supply"
-    elif any(k in text for k in ["穿搭", "搭配", "体型", "衣橱", "职场", "护理"]):
+    
+    # 品牌相关
+    brand_keywords = ["品牌", "联名", "新品", "发布", "旗舰店", "门店", "零售",
+                     "UR", "太平鸟", "ICICLE", "之禾", "MO&Co", "例外",
+                     "Zara", "H&M", "Uniqlo", "优衣库", "Gap", "Nike", "Adidas",
+                     "品牌定位", "品牌战略", "品牌升级", "品牌出海",
+                     "brand strategy", "brand positioning", "brand launch",
+                     "retail expansion", "store opening", "collaboration"]
+    if any(k in text for k in brand_keywords):
+        return "brand"
+    
+    # 指南/消费者相关
+    guide_keywords = ["穿搭", "搭配", "体型", "衣橱", "职场", "护理", "保养",
+                     "选购", "挑选", "适合", "推荐", "指南", "攻略",
+                     "小个子", "高个子", "微胖", "显瘦", "显高",
+                     "stying", "how to wear", "dressing guide", "wardrobe",
+                     "body type", "outfit", "style guide", "fashion tips"]
+    if any(k in text for k in guide_keywords):
         return "guide"
-    else:
-        return "trend"  # 默认趋势
+    
+    # 概念/方法论
+    concept_keywords = ["GEO", "方法论", "模型", "框架", "体系", "标准化",
+                       "概念", "定义", "分类", "维度", "指标",
+                       "方法论", "最佳实践", "行业洞察", "白皮书",
+                       "framework", "methodology", "model", "standard"]
+    if any(k in text for k in concept_keywords):
+        return "concept"
+    
+    # 趋势 (默认)
+    return "trend"
 
 def build_prompt(title, summary, content_type):
     """构建 Perplexity prompt - 明确从时尚行业视角分析"""
@@ -483,16 +518,74 @@ def main():
         log("⚠️ 没有原始文件，退出")
         return
     
-    # 处理
+    # 处理 - 按类型配额分配，确保多样性
     generated = []
-    max_attempts = min(100, len(raw_files))  # 最多尝试 100 个文件
-    for raw_file in raw_files[:max_attempts]:
-        if len(generated) >= args.max_articles:
-            break
+    type_counts = {"trend": 0, "brand": 0, "fabric": 0, "supply": 0, "guide": 0, "concept": 0}
+    
+    # 每种类型的目标配额 (总计不超过 max_articles)
+    type_quota = {
+        "trend": min(2, args.max_articles),
+        "brand": min(1, max(0, args.max_articles - 2)),
+        "fabric": min(1, max(0, args.max_articles - 3)),
+        "supply": min(1, max(0, args.max_articles - 4)),
+        "guide": min(1, max(0, args.max_articles - 5)),
+        "concept": min(1, max(0, args.max_articles - 5))
+    }
+    
+    # 先按类型分组收集可处理的文件
+    type_files = {"trend": [], "brand": [], "fabric": [], "supply": [], "guide": [], "concept": []}
+    max_scan = min(200, len(raw_files))  # 最多扫描 200 个文件做分类
+    
+    for raw_file in raw_files[:max_scan]:
+        try:
+            with open(raw_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            title = data.get("title", "")
+            summary = data.get("summary", "")
+            raw_text = max([summary, data.get("content", ""), data.get("content_preview", "")], key=len)
+            
+            if title and len(raw_text) >= 50 and is_fashion_related(title, raw_text):
+                content_type = classify_content(title, raw_text)
+                type_files[content_type].append(raw_file)
+        except:
+            continue
+    
+    log(f"📊 按类型分布: trend={len(type_files['trend'])}, brand={len(type_files['brand'])}, fabric={len(type_files['fabric'])}, supply={len(type_files['supply'])}, guide={len(type_files['guide'])}, concept={len(type_files['concept'])}")
+    
+    # 按配额处理，确保多样性
+    for content_type in ["fabric", "supply", "brand", "guide", "concept", "trend"]:
+        quota = type_quota.get(content_type, 0)
+        if quota <= 0:
+            continue
+            
+        files = type_files.get(content_type, [])
+        log(f"📂 处理 {content_type} 类型: {len(files)} 个候选，配额 {quota}")
         
-        result = process_single_file(raw_file)
-        if result and result["score"] >= args.min_score:
-            generated.append(result)
+        for raw_file in files:
+            if len(generated) >= args.max_articles:
+                break
+            if type_counts[content_type] >= quota:
+                break
+                
+            result = process_single_file(raw_file)
+            if result and result["score"] >= args.min_score:
+                generated.append(result)
+                type_counts[content_type] += 1
+    
+    # 如果还有剩余配额，用趋势文章补充
+    remaining = args.max_articles - len(generated)
+    if remaining > 0 and type_files["trend"]:
+        log(f"📂 用趋势文章补充剩余 {remaining} 个配额")
+        for raw_file in type_files["trend"]:
+            if len(generated) >= args.max_articles:
+                break
+            # 跳过已处理的
+            if any(g.get("filename") and raw_file.name in str(g.get("filename", "")) for g in generated):
+                continue
+            result = process_single_file(raw_file)
+            if result and result["score"] >= args.min_score:
+                generated.append(result)
+                type_counts["trend"] += 1
     
     # 汇总
     log("=" * 60)

@@ -1,0 +1,133 @@
+{
+  "pipeline_name": "Fashion Wiki 内容采集管道",
+  "version": "1.0.0",
+  "description": "多源采集 → 原始存储 → LLM-Wiki 格式化 → 人工审核队列",
+
+  "sources": {
+    "perplexity": {
+      "enabled": true,
+      "api_endpoint": "https://api.perplexity.ai/chat/completions",
+      "model": "sonar-pro",
+      "rate_limit": "10 requests/minute",
+      "queries_schedule": {
+        "daily": [
+          "2026年春夏中国服装流行趋势",
+          "中国本土服装品牌最新动态 太平鸟 UR MO&Co",
+          "可持续面料技术进展 天丝 有机棉 再生纤维",
+          "服装供应链变化 代工 小单快反 OEM ODM",
+          "服装消费者穿搭指南 体型搭配 职场衣橱"
+        ],
+        "weekly": [
+          "国际时装周总结 巴黎 米兰 纽约",
+          "面料科技创新 功能性面料 智能纺织",
+          "服装品牌联名合作动态",
+          "服装行业ESG可持续报告"
+        ],
+        "monthly": [
+          "服装行业半年度报告 市场分析",
+          "消费者行为变化分析 购买趋势",
+          "服装供应链成本变化 原材料价格"
+        ]
+      }
+    },
+
+    "rss": {
+      "enabled": true,
+      "feeds": {
+        "国际媒体": [
+          "https://wwd.com/feed/",
+          "https://www.businessoffashion.com/feed/",
+          "https://www.vogue.com/feed/",
+          "https://hypebeast.com/feed",
+          "https://www.highsnobiety.com/feed/",
+          "https://fashionunited.com/rss",
+          "https://www.just-style.com/rss/"
+        ],
+        "面料科技": [
+          "https://www.textileworld.com/feed/",
+          "https://www.fibre2fashion.com/rss/News-Industries.asp",
+          "https://www.just-style.com/rss/"
+        ],
+        "供应链": [
+          "https://www.sourcingjournal.com/feed/",
+          "https://apparelinsider.com/feed/"
+        ],
+        "品牌商业": [
+          "https://retaildetail.eu/rss.xml",
+          "https://fashionunited.uk/rss"
+        ],
+        "可持续时尚": [
+          "https://www.ecotextile.com/rss.php",
+          "https://goodonyou.eco/feed/"
+        ],
+      },
+      "fetch_interval": "every 4 hours",
+      "max_entries_per_feed": 10,
+      "cutoff_days": 3
+    },
+
+    "brand_monitor": {
+      "enabled": true,
+      "brands": [
+        {"brand": "UR", "domain": "ur.com", "news_path": "/news"},
+        {"brand": "太平鸟", "domain": "peacebird.com", "news_path": "/news"},
+        {"brand": "ICICLE", "domain": "icicle.com", "news_path": "/news"},
+        {"brand": "MO&Co", "domain": "mo-co.com", "news_path": "/news"},
+        {"brand": "例外", "domain": "exception.com", "news_path": "/news"}
+      ],
+      "check_interval": "daily"
+    },
+
+    "social_twitter": {
+      "enabled": false,
+      "note": "需要配置 X_BEARER_TOKEN 环境变量",
+      "queries": [
+        "fashion trend 2026",
+        "sustainable fashion",
+        "quiet luxury",
+        "new chinese style fashion",
+        "面料 趋势",
+        "服装品牌 新品"
+      ],
+      "max_results_per_query": 10
+    },
+
+    "fashion_events": {
+      "enabled": true,
+      "sources": [
+        "https://cfda.com/events/feed",
+        "https://britishfashioncouncil.co.uk/events/feed",
+        "https://modeaparis.com/en/events/feed"
+      ],
+      "check_interval": "weekly"
+    }
+  },
+
+  "processing": {
+    "auto_process_to_draft": true,
+    "max_drafts_per_run": 20,
+    "content_categories": {
+      "brand": "brands/",
+      "fabric": "fabrics/",
+      "trend": "trends/",
+      "supply": "supply-chain/",
+      "guide": "guides/",
+      "faq": "faq/",
+      "general": "concepts/"
+    }
+  },
+
+  "output": {
+    "raw_dir": "./raw",
+    "processed_dir": "./processed",
+    "final_dir": "../../",
+    "log_dir": "./logs"
+  },
+
+  "quality_control": {
+    "required_fields": ["title", "description", "date"],
+    "max_age_days": 90,
+    "min_content_length": 500,
+    "citation_required": true
+  }
+}
