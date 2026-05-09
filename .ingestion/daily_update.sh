@@ -104,28 +104,47 @@ REPORT="Fashion Wiki 每日更新报告 ✅
 
 log "$REPORT"
 
-# 飞书通知 (使用 OpenAPI 复用 AIRefWatcher 配置)
+# 飞书通知 (群聊 + 私聊)
 FEISHU_CHAT_ID="oc_bff3f3f0783f18abffe6fb1a98f9c09e"
+FEISHU_OPEN_ID="ou_b28161ad7fd27e34675cd7f209360dbc"
 FEISHU_SCRIPT="/Users/zgeo01/.openclaw/workspace/agents/airefwatcher/scripts/feishu_notifier.py"
 
 if [[ -f "$FEISHU_SCRIPT" ]]; then
-    log "📱 发送飞书通知..."
+    log "📱 发送飞书通知 (群聊 + 私聊)..."
     
-    # 创建临时 Python 脚本，通过 stdin 接收报告内容
     cat > /tmp/fashion_wiki_feishu.py << 'PYEOF'
 import sys
 sys.path.insert(0, "/Users/zgeo01/.openclaw/workspace/agents/airefwatcher/scripts")
 from feishu_notifier import notify_text
+import requests, json
 
 chat_id = "oc_bff3f3f0783f18abffe6fb1a98f9c09e"
+open_id = "ou_b28161ad7fd27e34675cd7f209360dbc"
 report = sys.stdin.read()
-success = notify_text(chat_id, report)
-print("飞书发送结果:", "成功" if success else "失败")
+
+# 发送到群聊
+success1 = notify_text(chat_id, report)
+print(f"群聊发送: {'成功' if success1 else '失败'}")
+
+# 发送到私聊
+from feishu_notifier import FeishuNotifier
+notifier = FeishuNotifier()
+token = notifier._get_app_access_token()
+headers = {'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'}
+url = 'https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=open_id'
+payload = {
+    'receive_id': open_id,
+    'msg_type': 'text',
+    'content': json.dumps({'text': report})
+}
+resp = requests.post(url, headers=headers, json=payload, timeout=30)
+success2 = resp.json().get('code') == 0
+print(f"私聊发送: {'成功' if success2 else '失败'}")
 PYEOF
 
     echo "$REPORT" | python3 /tmp/fashion_wiki_feishu.py >> "$LOG_FILE" 2>&1
     rm -f /tmp/fashion_wiki_feishu.py
-    log "📱 飞书通知已发送"
+    log "📱 飞书通知已发送 (群聊 + 私聊)"
 else
     log "⚠️ 飞书通知脚本不存在，跳过"
 fi
