@@ -104,17 +104,30 @@ REPORT="Fashion Wiki 每日更新报告 ✅
 
 log "$REPORT"
 
-# 飞书通知
-if [[ -n "$FEISHU_WEBHOOK" ]]; then
-    curl -s -X POST "$FEISHU_WEBHOOK" \
-        -H "Content-Type: application/json" \
-        -d "{
-            \"msg_type\": \"text\",
-            \"content\": {
-                \"text\": \"$REPORT\"
-            }
-        }" > /dev/null 2>&1 || true
+# 飞书通知 (使用 OpenAPI 复用 AIRefWatcher 配置)
+FEISHU_CHAT_ID="oc_bff3f3f0783f18abffe6fb1a98f9c09e"
+FEISHU_SCRIPT="/Users/zgeo01/.openclaw/workspace/agents/airefwatcher/scripts/feishu_notifier.py"
+
+if [[ -f "$FEISHU_SCRIPT" ]]; then
+    log "📱 发送飞书通知..."
+    
+    # 创建临时 Python 脚本，通过 stdin 接收报告内容
+    cat > /tmp/fashion_wiki_feishu.py << 'PYEOF'
+import sys
+sys.path.insert(0, "/Users/zgeo01/.openclaw/workspace/agents/airefwatcher/scripts")
+from feishu_notifier import notify_text
+
+chat_id = "oc_bff3f3f0783f18abffe6fb1a98f9c09e"
+report = sys.stdin.read()
+success = notify_text(chat_id, report)
+print("飞书发送结果:", "成功" if success else "失败")
+PYEOF
+
+    echo "$REPORT" | python3 /tmp/fashion_wiki_feishu.py >> "$LOG_FILE" 2>&1
+    rm -f /tmp/fashion_wiki_feishu.py
     log "📱 飞书通知已发送"
+else
+    log "⚠️ 飞书通知脚本不存在，跳过"
 fi
 
 log "🎉 全部完成!"
