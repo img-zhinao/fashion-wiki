@@ -1,5 +1,5 @@
 ---
-title: Hans Feurer: ‘Behind Fashion There Is Always a Dream’
+title: "Hans Feurer: ‘Behind Fashion There Is Always a Dream’"
 description: 中国服装品牌若想在国际舞台建立长期辨识度，必须从“卖产品”转向“讲好女性故事”，以更具人文深度的视觉叙事重塑品牌形象。
 date: 2026-05-08
 tags: [趋势, 2026, 时尚]

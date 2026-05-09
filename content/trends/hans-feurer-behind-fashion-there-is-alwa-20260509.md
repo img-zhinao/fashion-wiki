@@ -1,5 +1,5 @@
 ---
-title: Hans Feurer: ‘Behind Fashion There Is Always a Dream’
+title: "Hans Feurer: ‘Behind Fashion There Is Always a Dream’"
 description: 国际顶级时尚摄影师的女性审美理念正在重塑全球服装品牌的视觉语言，中国服装企业需要从单纯的商业展示转向深层人文叙事，以提升品牌国际竞争力。
 date: 2026-05-09
 tags: [趋势, 2026, 时尚]
