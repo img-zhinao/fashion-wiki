@@ -79,8 +79,8 @@ def generate_index():
     # 生成索引内容
     lines = [
         "---",
-        "title: Fashion Wiki 全局内容字典",
-        f"description: 服装产业 AI 知识网络的内容索引，记录所有页面的 slug 与一句话描述。最后更新: {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+        "title: \"Fashion Wiki 全局内容字典\"",
+        f"description: \"服装产业 AI 知识网络的内容索引，记录所有页面的 slug 与一句话描述。\"",
         f"date: {datetime.now().strftime('%Y-%m-%d')}",
         "tags: [index, fashion, wiki]",
         "aliases: [home, 首页]",
