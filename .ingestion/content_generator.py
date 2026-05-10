@@ -363,6 +363,20 @@ def generate_filename(content_type, title):
     
     return f"{folder}/{slug}-{timestamp}.md"
 
+def yaml_quote(value):
+    """安全地引用 YAML 字符串值"""
+    if not value:
+        return '""'
+    # 如果值包含双引号，转义它们
+    value = value.replace('"', '\\"')
+    # 如果值包含特殊字符（冒号、中文冒号、单引号等），用双引号包裹
+    if ':' in value or '：' in value or "'" in value or '"' in value or '[' in value or ']' in value:
+        return f'"{value}"'
+    # 如果值以特殊字符开头或包含空格，也用引号包裹
+    if value.startswith(('@', '`', '|', '>', '*', '&', '!', '%', '#', '{', '}')) or ' ' in value:
+        return f'"{value}"'
+    return value
+
 def add_frontmatter(content, title, description, content_type):
     """添加 LLM-Wiki frontmatter"""
     
@@ -378,8 +392,8 @@ def add_frontmatter(content, title, description, content_type):
     date = datetime.now().strftime('%Y-%m-%d')
     
     frontmatter = f"""---
-title: {title}
-description: {description[:140]}
+title: {yaml_quote(title)}
+description: {yaml_quote(description[:140])}
 date: {date}
 tags: [{tags}]
 aliases: []
